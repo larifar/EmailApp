@@ -19,40 +19,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun EmailComp(
-    sender: String,
-    title: String,
-    content: String,
-    date: String,
-    isNew: Boolean,
-    initialLabel: MutableList<EmailLabel>
-) {
-    var label by remember { mutableStateOf(initialLabel) }
+fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit, repository: EmailRepository) {
+    var label by remember { mutableStateOf(email.initialLabel) }
 
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
-    ){
-        Column (modifier = Modifier.fillMaxWidth()){
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = sender,
-                        fontWeight = isReaded(isNew),
+                        text = email.sender,
+                        fontWeight = isReaded(email.isNew),
                         fontSize = 17.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -60,44 +55,34 @@ fun EmailComp(
                     IconButton(
                         onClick = {
                             label = toggleFavorite(label)
-                        },
-                        modifier = Modifier.padding(0.dp)
+                            val updatedEmail = email.copy(initialLabel = label)
+                            onToggleFavorite(updatedEmail)
+                            repository.update(updatedEmail)
+                        }
                     ) {
                         Icon(
                             modifier = Modifier.size(20.dp),
                             imageVector = isFavorite(labels = label),
-                            contentDescription = "outline star",
+                            contentDescription = "Favorite Icon",
                             tint = Color.Yellow,
                         )
                     }
                 }
-                Text(text = date, fontSize = 15.sp)
+                Text(text = email.date, fontSize = 15.sp)
             }
-            Text(text = title, fontWeight = isReaded(isNew), fontSize = (17.5).sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = content, maxLines = 1, fontSize = 16.sp, overflow = TextOverflow.Ellipsis)
-            
+            Text(
+                text = email.title,
+                fontWeight = isReaded(email.isNew),
+                fontSize = 17.5.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = email.content,
+                maxLines = 1,
+                fontSize = 16.sp,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
-}
-enum class EmailLabel {
-    PRIMARY,
-    SOCIAL,
-    PROMOTIONS,
-    UPDATES,
-    FORUMS,
-    FAVORITE
-
-}
-
-@Preview
-@Composable
-fun PreviewEmail() {
-    EmailComp(
-        sender = "Larissa faria",
-        title = "Não perca essa oportunidade incrivel",
-        content = "Olha aqui essa promoção incrivel sobre coisas que você não tem interesse",
-        date = "06h23",
-        isNew = true,
-        initialLabel = mutableListOf( EmailLabel.PRIMARY)
-    )
 }
