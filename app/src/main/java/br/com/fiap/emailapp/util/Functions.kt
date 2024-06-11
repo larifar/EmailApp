@@ -5,10 +5,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import br.com.fiap.emailapp.R
-import br.com.fiap.emailapp.components.Email
-import br.com.fiap.emailapp.components.EmailLabel
+import br.com.fiap.emailapp.database.model.EmailLabel
 
-    @Composable
+@Composable
     fun isFavorite(labels: List<EmailLabel>): ImageVector {
         return if (labels.contains(EmailLabel.FAVORITE)) {
             ImageVector.vectorResource(id = R.drawable.favorite_star)

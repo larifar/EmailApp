@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,12 +38,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.emailapp.database.dao.EmailDatabase
+import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.HomeScreen
 import br.com.fiap.emailapp.services.getEmails
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
@@ -52,6 +57,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val database = EmailDatabase.getDatabase(this)
         setContent {
             EmailAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyApp()
+                    MyApp(database)
                 }
             }
         }
@@ -69,9 +75,15 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp() {
-    val list = getEmails();
-    var emailList by remember { mutableStateOf(list) }
+fun MyApp(database: EmailDatabase) {
+    val context = LocalContext.current
+    val repository = EmailRepository(context)
+    var emailList by remember { mutableStateOf(listOf<Email>())  }
+
+    LaunchedEffect(Unit) {
+        emailList = repository.listarEmails()
+    }
+
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()

@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import br.com.fiap.emailapp.components.Email
 import br.com.fiap.emailapp.components.EmailComp
+import br.com.fiap.emailapp.database.model.Email
 
 @Composable
 fun HomeScreen(navController: NavHostController, emails: List<Email>) {

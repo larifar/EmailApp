@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
@@ -80,31 +81,3 @@ fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit) {
         }
     }
 }
-enum class EmailLabel {
-    PRIMARY,
-    SOCIAL,
-    PROMOTIONS,
-    UPDATES,
-    FORUMS,
-    FAVORITE
-
-}
-interface IEmail{
-    val id: Int
-    val sender: String
-    val title: String
-    val content: String
-    val date: String
-    val isNew: Boolean
-    val initialLabel: MutableList<EmailLabel>
-}
-
-data class Email(
-    override val id: Int,
-    override val sender: String,
-    override val title: String,
-    override val content: String,
-    override val date: String,
-    override val isNew: Boolean,
-    override val initialLabel: MutableList<EmailLabel>
-) : IEmail
