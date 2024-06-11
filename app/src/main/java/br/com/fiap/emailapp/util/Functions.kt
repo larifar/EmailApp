@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import br.com.fiap.emailapp.R
+import br.com.fiap.emailapp.components.Email
 import br.com.fiap.emailapp.components.EmailLabel
 
     @Composable

@@ -26,22 +26,20 @@ import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
-fun EmailComp(email: Email) {
+fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit) {
     var label by remember { mutableStateOf(email.initialLabel) }
 
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
-    ){
-        Column (modifier = Modifier.fillMaxWidth()){
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = email.sender,
                         fontWeight = isReaded(email.isNew),
@@ -52,13 +50,14 @@ fun EmailComp(email: Email) {
                     IconButton(
                         onClick = {
                             label = toggleFavorite(label)
+                            onToggleFavorite(email.copy(initialLabel = label))
                         },
                         modifier = Modifier.padding(0.dp)
                     ) {
                         Icon(
                             modifier = Modifier.size(20.dp),
                             imageVector = isFavorite(labels = label),
-                            contentDescription = "outline star",
+                            contentDescription = "Favorite Icon",
                             tint = Color.Yellow,
                         )
                     }
@@ -68,7 +67,7 @@ fun EmailComp(email: Email) {
             Text(
                 text = email.title,
                 fontWeight = isReaded(email.isNew),
-                fontSize = (17.5).sp,
+                fontSize = 17.5.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -78,7 +77,6 @@ fun EmailComp(email: Email) {
                 fontSize = 16.sp,
                 overflow = TextOverflow.Ellipsis
             )
-            
         }
     }
 }
@@ -92,6 +90,7 @@ enum class EmailLabel {
 
 }
 interface IEmail{
+    val id: Int
     val sender: String
     val title: String
     val content: String
@@ -101,6 +100,7 @@ interface IEmail{
 }
 
 data class Email(
+    override val id: Int,
     override val sender: String,
     override val title: String,
     override val content: String,
