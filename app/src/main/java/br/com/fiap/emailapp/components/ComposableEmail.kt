@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.emailapp.util.isFavorite
@@ -27,15 +26,8 @@ import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
-fun EmailComp(
-    sender: String,
-    title: String,
-    content: String,
-    date: String,
-    isNew: Boolean,
-    initialLabel: MutableList<EmailLabel>
-) {
-    var label by remember { mutableStateOf(initialLabel) }
+fun EmailComp(email: Email) {
+    var label by remember { mutableStateOf(email.initialLabel) }
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -51,8 +43,8 @@ fun EmailComp(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = sender,
-                        fontWeight = isReaded(isNew),
+                        text = email.sender,
+                        fontWeight = isReaded(email.isNew),
                         fontSize = 17.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -71,10 +63,21 @@ fun EmailComp(
                         )
                     }
                 }
-                Text(text = date, fontSize = 15.sp)
+                Text(text = email.date, fontSize = 15.sp)
             }
-            Text(text = title, fontWeight = isReaded(isNew), fontSize = (17.5).sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = content, maxLines = 1, fontSize = 16.sp, overflow = TextOverflow.Ellipsis)
+            Text(
+                text = email.title,
+                fontWeight = isReaded(email.isNew),
+                fontSize = (17.5).sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = email.content,
+                maxLines = 1,
+                fontSize = 16.sp,
+                overflow = TextOverflow.Ellipsis
+            )
             
         }
     }
@@ -88,16 +91,20 @@ enum class EmailLabel {
     FAVORITE
 
 }
-
-@Preview
-@Composable
-fun PreviewEmail() {
-    EmailComp(
-        sender = "Larissa faria",
-        title = "Não perca essa oportunidade incrivel",
-        content = "Olha aqui essa promoção incrivel sobre coisas que você não tem interesse",
-        date = "06h23",
-        isNew = true,
-        initialLabel = mutableListOf( EmailLabel.PRIMARY)
-    )
+interface IEmail{
+    val sender: String
+    val title: String
+    val content: String
+    val date: String
+    val isNew: Boolean
+    val initialLabel: MutableList<EmailLabel>
 }
+
+data class Email(
+    override val sender: String,
+    override val title: String,
+    override val content: String,
+    override val date: String,
+    override val isNew: Boolean,
+    override val initialLabel: MutableList<EmailLabel>
+) : IEmail

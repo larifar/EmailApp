@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
@@ -40,8 +41,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.emailapp.components.Email
 import br.com.fiap.emailapp.components.EmailComp
 import br.com.fiap.emailapp.components.EmailLabel
+import br.com.fiap.emailapp.pages.HomeScreen
+import br.com.fiap.emailapp.services.getEmails
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -67,6 +71,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
+    var emailList = getEmails();
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -95,7 +100,7 @@ fun MyApp() {
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     composable("home") {
-                        HomeScreen(navController)
+                        HomeScreen(navController, emailList)
                     }
                     composable("details") {
                         DetailsScreen()
@@ -153,30 +158,6 @@ fun DrawerItem(
                 }
             }
     )
-}
-
-@Composable
-fun HomeScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        EmailComp(
-            sender = "Larissa faria",
-            title = "Não perca essa oportunidade incrivel",
-            content = "Olha aqui essa promoção incrivel sobre coisas que você não tem interesse",
-            date = "06h23",
-            isNew = false,
-            initialLabel = mutableListOf( EmailLabel.PRIMARY)
-        )
-        EmailComp(
-            sender = "Thomas Ferroviarias",
-            title = "Nossas ferrovias a todo vapor",
-            content = "Tem interesse em viagens mais baratas? CLICK HERE!!!!!",
-            date = "07h00",
-            isNew = true,
-            initialLabel = mutableListOf( EmailLabel.FAVORITE)
-        )
-    }
 }
 
 @Composable
