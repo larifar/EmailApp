@@ -12,9 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import br.com.fiap.emailapp.components.EmailComp
 import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
-fun HomeScreen(navController: NavHostController, emails: List<Email>) {
+fun HomeScreen(navController: NavHostController, emails: List<Email>, repository: EmailRepository) : List<Email> {
     var emailList by remember { mutableStateOf(emails) }
 
     LazyColumn(
@@ -25,7 +26,9 @@ fun HomeScreen(navController: NavHostController, emails: List<Email>) {
                 emailList = emailList.map {
                     if (it.id == updatedEmail.id) updatedEmail else it
                 }
-            })
+            }, repository)
         }
     }
+
+    return emailList
 }

@@ -22,12 +22,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit) {
+fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit, repository: EmailRepository) {
     var label by remember { mutableStateOf(email.initialLabel) }
 
     Box(modifier = Modifier
@@ -51,9 +55,10 @@ fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit) {
                     IconButton(
                         onClick = {
                             label = toggleFavorite(label)
-                            onToggleFavorite(email.copy(initialLabel = label))
-                        },
-                        modifier = Modifier.padding(0.dp)
+                            val updatedEmail = email.copy(initialLabel = label)
+                            onToggleFavorite(updatedEmail)
+                            repository.update(updatedEmail)
+                        }
                     ) {
                         Icon(
                             modifier = Modifier.size(20.dp),

@@ -3,22 +3,23 @@ package br.com.fiap.emailapp.services
 import androidx.compose.runtime.Composable
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
+import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
-fun getEmails(): MutableList<Email> {
-    val emails : MutableList<Email> = mutableListOf()
-    emails.add(
+fun setEmails(repository: EmailRepository) {
+    repository.salvar(
         Email(
             id = 1,
-        sender = "Larissa Faria",
+            sender = "Larissa Faria",
             receiver = "eu",
-        title = "Titulo supe importante",
-        content = "sim conetudo super importante",
-        date = "06h00",
-        isNew = true,
-        initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-    ))
-    emails.add(
+            title = "Titulo supe importante",
+            content = "sim conetudo super importante",
+            date = "06h00",
+            isNew = true,
+            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
+        )
+    )
+    repository.salvar(
         Email(
             id = 2,
             sender = "Cachorrinhos br",
@@ -28,8 +29,9 @@ fun getEmails(): MutableList<Email> {
             date = "7h03",
             isNew = true,
             initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FAVORITE)
-        ))
-    emails.add(
+        )
+    )
+    repository.salvar(
         Email(
             id = 3,
             sender = "Roberto da Silva",
@@ -39,8 +41,9 @@ fun getEmails(): MutableList<Email> {
             date = "7h44",
             isNew = true,
             initialLabel = mutableListOf(EmailLabel.PRIMARY)
-        ))
-    emails.add(
+        )
+    )
+    repository.salvar(
         Email(
             id = 4,
             sender = "Charlie Jr.",
@@ -50,8 +53,9 @@ fun getEmails(): MutableList<Email> {
             date = "10h00",
             isNew = true,
             initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        ))
-    emails.add(
+        )
+    )
+    repository.salvar(
         Email(
             id = 5,
             sender = "Fly Try",
@@ -61,8 +65,9 @@ fun getEmails(): MutableList<Email> {
             date = "21h00",
             isNew = true,
             initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        ))
-    emails.add(
+        )
+    )
+    repository.salvar(
         Email(
             id = 6,
             sender = "Lol br",
@@ -72,8 +77,9 @@ fun getEmails(): MutableList<Email> {
             date = "23h00",
             isNew = false,
             initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        ))
-    emails.add(
+        )
+    )
+    repository.salvar(
         Email(
             id = 7,
             sender = "hau mesuv",
@@ -83,6 +89,6 @@ fun getEmails(): MutableList<Email> {
             date = "ontem",
             isNew = false,
             initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        ))
-    return emails
+        )
+    )
 }

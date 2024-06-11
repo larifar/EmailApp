@@ -49,10 +49,11 @@ import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.HomeScreen
-import br.com.fiap.emailapp.services.getEmails
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,11 +79,8 @@ class MainActivity : ComponentActivity() {
 fun MyApp(database: EmailDatabase) {
     val context = LocalContext.current
     val repository = EmailRepository(context)
-    var emailList by remember { mutableStateOf(listOf<Email>())  }
-
-    LaunchedEffect(Unit) {
-        emailList = repository.listarEmails()
-    }
+    var emailList by remember { mutableStateOf(listOf<Email>()) }
+    emailList = repository.listarEmails()
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -112,7 +110,8 @@ fun MyApp(database: EmailDatabase) {
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     composable("home") {
-                        HomeScreen(navController, emailList)
+                        emailList = HomeScreen(navController, emailList, repository)
+
                     }
                     composable("details") {
                         DetailsScreen()

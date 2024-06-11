@@ -12,6 +12,10 @@ class EmailRepository(context: Context) {
         return db.salvar(email)
     }
 
+    fun update(email: Email){
+        return db.update(email)
+    }
+
     fun excluir(email: Email): Int{
         return db.deletar(email)
     }
