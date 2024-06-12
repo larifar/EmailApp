@@ -20,7 +20,8 @@ fun FilterComp(currentFilter: EmailLabel?, onFilterChange: (EmailLabel?) -> Unit
         EmailLabel.PRIMARY to "Principal",
         EmailLabel.SOCIAL to "Social",
         EmailLabel.PROMOTIONS to "Promoções",
-        EmailLabel.FORUMS to "Fóruns"
+        EmailLabel.FORUMS to "Fóruns",
+        EmailLabel.FAVORITE to "Favoritos"
     )
     Row(
         modifier = Modifier

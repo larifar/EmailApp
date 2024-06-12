@@ -48,6 +48,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import br.com.fiap.emailapp.pages.EmailDetail
 import br.com.fiap.emailapp.pages.HomeScreen
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
 import kotlinx.coroutines.CoroutineScope
@@ -113,8 +114,13 @@ fun MyApp(database: EmailDatabase) {
                         emailList = HomeScreen(navController, emailList, repository)
 
                     }
-                    composable("details") {
-                        DetailsScreen()
+                    composable("details/{emailId}") {
+                        val emailId = it.arguments?.getString("emailId")?.toLongOrNull()
+                        val email = emailList.find { it.id == emailId }
+                        if (email != null){
+                            EmailDetail(email, navController)
+                        }
+    
                     }
                 }
             }

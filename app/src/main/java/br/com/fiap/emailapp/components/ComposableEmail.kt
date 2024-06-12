@@ -1,5 +1,6 @@
 package br.com.fiap.emailapp.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,19 +28,21 @@ import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
-fun EmailComp(email: Email, onToggleFavorite: (Email) -> Unit, repository: EmailRepository) {
+fun EmailComp(
+    email: Email,
+    onToggleFavorite: (Email) -> Unit,
+    repository: EmailRepository,
+    onClick: () -> Unit
+) {
     var label by remember { mutableStateOf(email.initialLabel) }
 
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

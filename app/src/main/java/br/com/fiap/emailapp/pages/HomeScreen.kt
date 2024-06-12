@@ -36,11 +36,16 @@ fun HomeScreen(navController: NavHostController, emails: List<Email>, repository
             modifier = Modifier.fillMaxSize()
         ) {
             items(filteredEmails) {email->
-                EmailComp(email = email, onToggleFavorite = { updatedEmail ->
-                    emailList = emailList.map {
-                        if (it.id == updatedEmail.id) updatedEmail else it
-                    }
-                }, repository)
+                EmailComp(
+                    email = email,
+                    onClick = { navController.navigate("details/${email.id}") },
+                    onToggleFavorite = { updatedEmail ->
+                        emailList = emailList.map {
+                            if (it.id == updatedEmail.id) updatedEmail else it
+                        }
+                    },
+                    repository = repository
+                )
             }
         }
     }
