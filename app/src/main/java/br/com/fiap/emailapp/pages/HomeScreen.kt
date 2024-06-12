@@ -38,7 +38,15 @@ fun HomeScreen(navController: NavHostController, emails: List<Email>, repository
             items(filteredEmails) {email->
                 EmailComp(
                     email = email,
-                    onClick = { navController.navigate("details/${email.id}") },
+                    onClick = {
+                        val updatedEmail = email.copy(isNew = false)
+                        emailList = emailList.map {
+                            if (it.id == updatedEmail.id) updatedEmail else it
+                        }
+                        repository.update(updatedEmail)
+                        navController.navigate("details/${email.id}")
+
+                              },
                     onToggleFavorite = { updatedEmail ->
                         emailList = emailList.map {
                             if (it.id == updatedEmail.id) updatedEmail else it

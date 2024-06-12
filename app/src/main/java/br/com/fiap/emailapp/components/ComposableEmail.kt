@@ -42,7 +42,10 @@ fun EmailComp(
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick() }) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
