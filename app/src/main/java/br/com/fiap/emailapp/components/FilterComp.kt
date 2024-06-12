@@ -1,10 +1,12 @@
 package br.com.fiap.emailapp.components
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,21 +16,27 @@ import br.com.fiap.emailapp.database.model.EmailLabel
 
 @Composable
 fun FilterComp(currentFilter: EmailLabel?, onFilterChange: (EmailLabel?) -> Unit) {
+    val labels = listOf(
+        EmailLabel.PRIMARY to "Principal",
+        EmailLabel.SOCIAL to "Social",
+        EmailLabel.PROMOTIONS to "Promoções",
+        EmailLabel.FORUMS to "Fóruns"
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
             .height(50.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Button(onClick = { onFilterChange(EmailLabel.PRIMARY) }) {
-            Text(text = "Principal")
-        }
-        Button(onClick = { onFilterChange(EmailLabel.SOCIAL) }) {
-            Text(text = "Social")
-        }
-        Button(onClick = { onFilterChange(EmailLabel.PROMOTIONS) }) {
-            Text(text = "Promoções")
+        labels.forEach { (label, labelName) ->
+            Button(
+                onClick = { onFilterChange(label) },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            ) {
+                Text(text = labelName)
+            }
         }
         Button(onClick = { onFilterChange(null) }) {
             Text(text = "Todos")
