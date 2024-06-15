@@ -57,5 +57,6 @@ fun HomeScreen(navController: NavHostController, emails: List<Email>, repository
             }
         }
     }
+
     return emailList
 }

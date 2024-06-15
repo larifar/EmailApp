@@ -45,8 +45,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.emailapp.components.Calendar
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.EmailDetail
 import br.com.fiap.emailapp.pages.HomeScreen
@@ -78,6 +80,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp(database: EmailDatabase) {
+    //emails que tem queser respondidos marcados para ver depois e ter um notification para nao se esuqeça de ver esses emails
     val context = LocalContext.current
     val repository = EmailRepository(context)
     var emailList by remember { mutableStateOf(listOf<Email>()) }
@@ -118,9 +121,13 @@ fun MyApp(database: EmailDatabase) {
                         val emailId = it.arguments?.getString("emailId")?.toLongOrNull()
                         val email = emailList.find { it.id == emailId }
                         if (email != null){
-                            EmailDetail(email, navController)
+                            EmailDetail(email, navController, repository)
                         }
     
+                    }
+                    composable("calendar") {
+                        Calendar()
+
                     }
                 }
             }
@@ -140,8 +147,8 @@ fun DrawerContent(navController: NavHostController, drawerState: DrawerState, sc
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
         Spacer(modifier = Modifier.height(8.dp))
-        DrawerItem("Home", navController, "home", drawerState, scope, "home" === currentDestination)
-        DrawerItem("Details", navController, "details", drawerState, scope, "details" === currentDestination)
+        DrawerItem("Emails", navController, "home", drawerState, scope, "home" === currentDestination)
+        DrawerItem("Calendário", navController, "calendar", drawerState, scope, "calendar" === currentDestination)
     }
 }
 
@@ -176,12 +183,3 @@ fun DrawerItem(
     )
 }
 
-@Composable
-fun DetailsScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Details Screen")
-    }
-}
