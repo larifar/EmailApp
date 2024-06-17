@@ -43,6 +43,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.emailapp.components.Calendar
+import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
@@ -79,8 +80,8 @@ fun MyApp(database: EmailDatabase) {
     val context = LocalContext.current
     val repository = EmailRepository(context)
     SetEmails(repository)
-    var emailList by remember { mutableStateOf(listOf<Email>()) }
-    emailList = repository.listarEmails()
+    val emailListViewModel = EmailListViewModel(repository)
+    emailListViewModel.buscarEmails()
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -90,47 +91,46 @@ fun MyApp(database: EmailDatabase) {
         drawerState = drawerState,
         drawerContent = {
                 DrawerContent(navController, drawerState, scope)
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("Email App") },
-                        navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
-                            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Email App") },
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
                         }
-                    )
-                }
-            ) {innerPadding ->
-                NavHost(
-                    navController = navController,
-                    startDestination = "home",
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    composable("home") {
-                        emailList = HomeScreen(navController, emailList, repository)
+                    }
+                )
+            }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = "home",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable("home") {
+                    HomeScreen(navController, emailListViewModel, repository)
 
+                }
+                composable("details/{emailId}") {
+                    val emailId = it.arguments?.getString("emailId")?.toLongOrNull()
+                    val email = emailListViewModel.emailList.value.find{ it.id == emailId }
+                    if (email != null) {
+                        EmailDetail(email, navController, repository)
                     }
-                    composable("details/{emailId}") {
-                        val emailId = it.arguments?.getString("emailId")?.toLongOrNull()
-                        val email = emailList.find { it.id == emailId }
-                        if (email != null){
-                            EmailDetail(email, navController, repository)
-                        }
-    
-                    }
-                    composable("calendar") {
-                        Calendar()
-                    }
-                    composable("enviados"){
-                        EnviadosScreen()
-                    }
+
+                }
+                composable("calendar") {
+                    Calendar()
+                }
+                composable("enviados") {
+                    EnviadosScreen(emailListViewModel, repository, navController)
                 }
             }
         }
-    )
+    }
 }
 @Composable
 fun DrawerContent(navController: NavHostController, drawerState: DrawerState, scope: CoroutineScope) {

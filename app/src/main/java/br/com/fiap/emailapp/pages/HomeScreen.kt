@@ -21,14 +21,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import br.com.fiap.emailapp.components.EmailButton
 import br.com.fiap.emailapp.components.EmailComp
+import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.components.FilterComp
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
-fun HomeScreen(navController: NavHostController, emails: List<Email>, repository: EmailRepository) : List<Email> {
-    var emailList by remember { mutableStateOf(emails) }
+fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, repository: EmailRepository) : List<Email> {
+    viewModel.buscarEmails()
+    var emailList = viewModel.emailList.value
+    println(emailList)
     var filterLabel by remember { mutableStateOf<EmailLabel?>(null) }
     val context = LocalContext.current
 
