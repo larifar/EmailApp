@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,19 +29,19 @@ import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
-fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, repository: EmailRepository) : List<Email> {
+fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, repository: EmailRepository): List<Email> {
     viewModel.buscarEmails()
-    var emailList = viewModel.emailList.value
+    var emailList by remember { mutableStateOf(viewModel.emailList.value) }
     println(emailList)
-    var filterLabel by remember { mutableStateOf<EmailLabel?>(null) }
+    var filterLabel by remember { mutableStateOf<EmailLabel?>(EmailLabel.PRIMARY) }
     val context = LocalContext.current
 
     val filteredEmails = emailList.filter { email ->
         filterLabel == null || email.initialLabel.contains(filterLabel)
-    } .filterNot { email -> email.sender == "you" }
+    }.filterNot { email -> email.sender == "you" }
 
-    Column (
-        modifier= Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
         FilterComp(filterLabel, onFilterChange = { newLabel ->
             filterLabel = newLabel
@@ -49,7 +50,7 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(filteredEmails) {email->
+            items(filteredEmails) { email ->
                 EmailComp(
                     email = email,
                     onClick = {
@@ -59,22 +60,20 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                         }
                         repository.update(updatedEmail)
                         navController.navigate("details/${email.id}")
-
-                              },
+                    },
                     onToggleFavorite = { updatedEmail ->
                         emailList = emailList.map {
                             if (it.id == updatedEmail.id) updatedEmail else it
                         }
+                        repository.update(updatedEmail)
                     },
                     repository = repository
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-
             }
         }
     }
     EmailButton(context)
-
 
     return emailList
 }

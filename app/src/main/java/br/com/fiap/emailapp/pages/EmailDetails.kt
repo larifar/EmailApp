@@ -21,21 +21,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import br.com.fiap.emailapp.components.IconButtonWithDropdownMenu
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.util.isFavorite
-import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
 fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email {
     var label by remember { mutableStateOf(email.initialLabel) }
+    var emailState by remember { mutableStateOf(email) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -46,6 +45,10 @@ fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email 
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButtonWithDropdownMenu(email) { updatedEmail ->
+                emailState = updatedEmail
+                repo.update(updatedEmail)
+            }
             Column{
                 Text(
                     text = email.title,
