@@ -80,7 +80,6 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp(database: EmailDatabase) {
-    //emails que tem queser respondidos marcados para ver depois e ter um notification para nao se esuqeça de ver esses emails
     val context = LocalContext.current
     val repository = EmailRepository(context)
     var emailList by remember { mutableStateOf(listOf<Email>()) }
@@ -127,7 +126,6 @@ fun MyApp(database: EmailDatabase) {
                     }
                     composable("calendar") {
                         Calendar()
-
                     }
                 }
             }
