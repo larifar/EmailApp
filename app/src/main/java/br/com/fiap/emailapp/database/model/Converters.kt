@@ -10,9 +10,15 @@ class Converters {
 
     @TypeConverter
     fun toEmailLabelList(data: String): MutableList<EmailLabel> {
-         return data
-             .split(",")
-             .map { EmailLabel.valueOf(it) }
-             .toMutableList()
+        return data
+            .split(",")
+            .mapNotNull {
+                try {
+                    EmailLabel.valueOf(it)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            }
+            .toMutableList()
     }
 }
