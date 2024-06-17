@@ -1,7 +1,6 @@
 package br.com.fiap.emailapp.pages
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,27 +17,31 @@ import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
-fun EnviadosScreen(viewModel: EmailListViewModel, repository: EmailRepository, navController : NavHostController) {
+fun EnviadosScreen(
+    viewModel: EmailListViewModel,
+    repository: EmailRepository,
+    navController: NavHostController
+) {
     viewModel.buscarEmails()
     val emailsEnviados = viewModel.enviados.value
-    Column (modifier = Modifier.fillMaxSize()){
-        if (emailsEnviados.isEmpty()){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    "Nenhum email foi enviado.",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
 
-        } else{
-            LazyColumn(){
-                items(emailsEnviados){email ->
+    if (emailsEnviados.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Nenhum email enviado.",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
+            )
+        }
+
+    } else {
+        Column(modifier = Modifier.fillMaxSize()) {
+            LazyColumn() {
+                items(emailsEnviados) { email ->
                     EmailComp(
                         email = email,
                         onToggleFavorite = {},
