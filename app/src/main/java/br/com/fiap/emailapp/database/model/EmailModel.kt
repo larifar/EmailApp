@@ -22,6 +22,7 @@ interface IEmail{
     val title: String
     val content: String
     val date: String
+    val isArchived: Boolean
     val isNew: Boolean
     val initialLabel: MutableList<EmailLabel>
 }
@@ -37,6 +38,8 @@ data class Email(
     override val date: String,
     @ColumnInfo(name = "is_new")
     override val isNew: Boolean,
+    @ColumnInfo(name = "is_archived")
+    override var isArchived: Boolean = false,
     @ColumnInfo(name = "initial_label")
     override val initialLabel: MutableList<EmailLabel>
 ) : IEmail{
