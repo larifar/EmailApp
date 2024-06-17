@@ -20,7 +20,8 @@ fun FilterComp(currentFilter: EmailLabel?, onFilterChange: (EmailLabel?) -> Unit
         EmailLabel.PRIMARY to "Principal",
         EmailLabel.SOCIAL to "Social",
         EmailLabel.PROMOTIONS to "Promoções",
-        EmailLabel.FORUMS to "Fóruns"
+        EmailLabel.FORUMS to "Fóruns",
+        EmailLabel.FAVORITE to "Favoritos"
     )
     Row(
         modifier = Modifier
@@ -38,10 +39,9 @@ fun FilterComp(currentFilter: EmailLabel?, onFilterChange: (EmailLabel?) -> Unit
                 Text(text = labelName)
             }
         }
-        Button(onClick = { onFilterChange(EmailLabel.FAVORITE) }) {
-            Text(text = "Favoritos")
-        }
-        Button(onClick = { onFilterChange(null) }) {
+
+        Button(onClick = { onFilterChange(null) },
+            modifier = Modifier.padding(horizontal = 5.dp)) {
             Text(text = "Todos")
         }
     }
