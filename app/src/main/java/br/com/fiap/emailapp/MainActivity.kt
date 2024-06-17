@@ -47,6 +47,7 @@ import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.EmailDetail
+import br.com.fiap.emailapp.pages.EnviadosScreen
 import br.com.fiap.emailapp.pages.HomeScreen
 import br.com.fiap.emailapp.services.SetEmails
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
@@ -123,6 +124,9 @@ fun MyApp(database: EmailDatabase) {
                     composable("calendar") {
                         Calendar()
                     }
+                    composable("enviados"){
+                        EnviadosScreen()
+                    }
                 }
             }
         }
@@ -134,15 +138,37 @@ fun DrawerContent(navController: NavHostController, drawerState: DrawerState, sc
     val currentDestination = currentBackStackEntry?.destination?.route
     Column(
         modifier = Modifier
-            .fillMaxSize(4 / 5f)
+            .fillMaxSize(0.5f)
             .background(Color.White)
     ) {
-        Text("Navigation", style = MaterialTheme.typography.headlineLarge)
+        Text("Email App", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
         Spacer(modifier = Modifier.height(8.dp))
-        DrawerItem("Emails", navController, "home", drawerState, scope, "home" === currentDestination)
-        DrawerItem("Calendário", navController, "calendar", drawerState, scope, "calendar" === currentDestination)
+        DrawerItem(
+            "Emails",
+            navController,
+            "home",
+            drawerState,
+            scope,
+            "home" === currentDestination
+        )
+        DrawerItem(
+            "Calendário",
+            navController,
+            "calendar",
+            drawerState,
+            scope,
+            "calendar" === currentDestination
+        )
+        DrawerItem(
+            "Enviados",
+            navController,
+            "enviados",
+            drawerState,
+            scope,
+            "enviados" === currentDestination
+        )
     }
 }
 
@@ -155,8 +181,9 @@ fun DrawerItem(
     scope: CoroutineScope,
     isActive: Boolean
 ) {
-    val backgroundColor = if (isActive) Color.Gray else Color.Transparent
+    val backgroundColor = if (isActive) MaterialTheme.colorScheme.primary else Color.Transparent
     Text(
+        color = if (isActive) Color.White else Color.Black,
         text = text,
         modifier = Modifier
             .fillMaxWidth()

@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,8 @@ fun EmailButton(context: Context) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.email_icon),
                 contentDescription = "carta",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp),
+                tint = Color.White
             )
         }
     }
@@ -75,7 +77,7 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
         onDismissRequest = onDismiss,
-        title = { Text(text = "Compose Email") },
+        title = { Text(text = "Escrever email") },
         text = {
             Column (
                 modifier = Modifier
@@ -85,21 +87,21 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
                 TextField(
                     value = receiver,
                     onValueChange = { receiver = it },
-                    label = { Text("To") },
+                    label = { Text("Para") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Subject") },
+                    label = { Text("Título") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = content,
                     onValueChange = { content = it },
-                    label = { Text("Body") },
+                    label = { Text("Conteúdo") },
                     modifier = Modifier.fillMaxWidth().height(150.dp)
                 )
             }
