@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
 fun MyApp(database: EmailDatabase) {
     val context = LocalContext.current
     val repository = EmailRepository(context)
-    SetEmails(repository)
+    SetEmails(repository) //emails anteriores apagados e emails novos salvos no repositório para teste
     val emailListViewModel = EmailListViewModel(repository)
     emailListViewModel.buscarEmails()
 
