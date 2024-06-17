@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.model.EmailLabel
 
 @Composable
 fun IconButtonWithDropdownMenu(email: Email, onArchive: (Email)-> Unit) {
@@ -35,7 +36,9 @@ fun IconButtonWithDropdownMenu(email: Email, onArchive: (Email)-> Unit) {
             DropdownMenuItem(
                 text = { Text("Arquivar") },
                 onClick = {
-                    onArchive(email)
+                    val ini = email.initialLabel.filterNot { it == EmailLabel.PRIMARY }.toMutableList()
+                    val updatedEmail = email.copy(isArchived = true, initialLabel = ini)
+                    onArchive(updatedEmail)
                     expanded = false
                 }
             )

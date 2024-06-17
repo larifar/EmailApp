@@ -34,6 +34,7 @@ import br.com.fiap.emailapp.util.toggleFavorite
 @Composable
 fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email {
     var label by remember { mutableStateOf(email.initialLabel) }
+    var emailState by remember { mutableStateOf(email) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -44,7 +45,10 @@ fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email 
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButtonWithDropdownMenu(email, {it.isArchived = true})
+            IconButtonWithDropdownMenu(email) { updatedEmail ->
+                emailState = updatedEmail
+                repo.update(updatedEmail)
+            }
             Column{
                 Text(
                     text = email.title,
