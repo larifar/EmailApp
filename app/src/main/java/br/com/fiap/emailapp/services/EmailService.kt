@@ -6,89 +6,33 @@ import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
-fun setEmails(repository: EmailRepository) {
-    repository.salvar(
-        Email(
-            id = 1,
-            sender = "Larissa Faria",
-            receiver = "eu",
-            title = "Titulo supe importante",
-            content = "sim conetudo super importante",
-            date = "06h00",
-            isNew = true,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
+fun SetEmails(repository: EmailRepository) {
+    repository.excluirTodos()
+
+    for (i in 0..11) {
+        val remetente = "Remetente ${i + 1}"
+        val destinatario = "you"
+        val titulo = "Titulo Teste ${i + 1}"
+        val conteudo = "Conteudo de teste para email ${i + 1}"
+        val data = "17-06-2024 08:${i + 10}"
+        val novo = i % 2 == 0
+        val etiquetasIniciais = mutableListOf(
+            EmailLabel.PRIMARY,
+            if (i % 3 == 0) EmailLabel.FAVORITE else EmailLabel.UPDATES,
+            if (i % 4 == 0) EmailLabel.PROMOTIONS else EmailLabel.FORUMS
         )
-    )
-    repository.salvar(
-        Email(
-            id = 2,
-            sender = "Cachorrinhos br",
-            receiver = "eu",
-            title = "Salve os cachorros",
-            content = "Nos ajude a salvar cachorrinhos de rua",
-            date = "7h03",
-            isNew = true,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FAVORITE)
+
+        val email = Email(
+            id = 0,
+            sender = remetente,
+            receiver = destinatario,
+            title = titulo,
+            content = conteudo,
+            date = data,
+            isNew = novo,
+            initialLabel = etiquetasIniciais
         )
-    )
-    repository.salvar(
-        Email(
-            id = 3,
-            sender = "Roberto da Silva",
-            receiver = "eu",
-            title = "Reunião importante",
-            content = "Acesse o link abaixo",
-            date = "7h44",
-            isNew = true,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY)
-        )
-    )
-    repository.salvar(
-        Email(
-            id = 4,
-            sender = "Charlie Jr.",
-            receiver = "eu",
-            title = "Oportunidade",
-            content = "Venha fazer parte da minha comunidade do dircord",
-            date = "10h00",
-            isNew = true,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        )
-    )
-    repository.salvar(
-        Email(
-            id = 5,
-            sender = "Fly Try",
-            receiver = "eu",
-            title = "An exclusive card game",
-            content = "bala hewibnf aihaka aaaaj ",
-            date = "21h00",
-            isNew = true,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        )
-    )
-    repository.salvar(
-        Email(
-            id = 6,
-            sender = "Lol br",
-            receiver = "eu",
-            title = "jw kaopn ojdwn pp iajabu aaeef deofbfj",
-            content = "whjfkwefhe wefjkfefhe kjfbkweeuj rejbf we feh",
-            date = "23h00",
-            isNew = false,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        )
-    )
-    repository.salvar(
-        Email(
-            id = 7,
-            sender = "hau mesuv",
-            receiver = "eu",
-            title = "Jvw wj rkhh ldjufbe fhdndjhf hshb",
-            content = "sufei ewfeb wh ujdkj hirhw hwewoqçj s",
-            date = "ontem",
-            isNew = false,
-            initialLabel = mutableListOf(EmailLabel.PRIMARY, EmailLabel.FORUMS)
-        )
-    )
+
+        repository.salvar(email)
+    }
 }

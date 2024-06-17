@@ -20,6 +20,10 @@ class EmailRepository(context: Context) {
         return db.deletar(email)
     }
 
+    fun excluirTodos(){
+        return db.deleteAll()
+    }
+
     fun buscarPeloId(id: Long): Email{
         return db.buscarPeloId(id)
     }

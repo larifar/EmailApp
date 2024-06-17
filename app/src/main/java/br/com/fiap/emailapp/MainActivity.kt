@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,13 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,15 +45,13 @@ import androidx.navigation.compose.rememberNavController
 import br.com.fiap.emailapp.components.Calendar
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
-import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.EmailDetail
 import br.com.fiap.emailapp.pages.HomeScreen
+import br.com.fiap.emailapp.services.SetEmails
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +77,7 @@ class MainActivity : ComponentActivity() {
 fun MyApp(database: EmailDatabase) {
     val context = LocalContext.current
     val repository = EmailRepository(context)
+    SetEmails(repository)
     var emailList by remember { mutableStateOf(listOf<Email>()) }
     emailList = repository.listarEmails()
 

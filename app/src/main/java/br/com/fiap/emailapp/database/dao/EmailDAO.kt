@@ -18,6 +18,9 @@ interface EmailDAO {
     @Delete
     fun deletar(email: Email) : Int
 
+    @Query("DELETE FROM tbl_emails")
+    fun deleteAll()
+
     @Query("SELECT * FROM TBL_EMAILS WHERE id = :id")
     fun buscarPeloId(id: Long): Email
 

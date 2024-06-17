@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -63,10 +65,11 @@ fun EmailButton(context: Context) {
 
 @Composable
 fun EmailDialog(onDismiss: () -> Unit, context : Context) {
-    var email by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
-    var body by remember { mutableStateOf("") }
+    var receiver by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
 
+    val scope = rememberCoroutineScope()
     val emailRepository = EmailRepository(context)
 
     AlertDialog(
@@ -80,22 +83,22 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
                     .height(300.dp)
             ){
                 TextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = receiver,
+                    onValueChange = { receiver = it },
                     label = { Text("To") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
-                    value = subject,
-                    onValueChange = { subject = it },
+                    value = title,
+                    onValueChange = { title = it },
                     label = { Text("Subject") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
-                    value = body,
-                    onValueChange = { body = it },
+                    value = content,
+                    onValueChange = { content = it },
                     label = { Text("Body") },
                     modifier = Modifier.fillMaxWidth().height(150.dp)
                 )
@@ -106,21 +109,22 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
                 onClick = {
                     val newEmail = Email(
                         sender = "you",
-                        receiver= email,
-                        title = subject,
-                        content = body
+                        receiver= receiver,
+                        title = title,
+                        content = content
                     )
-                    emailRepository.salvar(newEmail)
-                    // Handle email sending logic here
-                    onDismiss()
+                    scope.launch {
+                        emailRepository.salvar(newEmail)
+                        onDismiss()
+                    }
                 }
             ) {
-                Text("Send")
+                Text("Enviar")
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Cancel")
+                Text("Cancelar")
             }
         }
     )

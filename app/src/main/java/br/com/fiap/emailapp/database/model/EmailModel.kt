@@ -3,6 +3,8 @@ package br.com.fiap.emailapp.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 enum class EmailLabel {
     PRIMARY,
@@ -56,9 +58,9 @@ data class Email(
 
     companion object {
         private fun getCurrentDate(): String {
-
-            // Retorna a data atual no formato desejado
-            return "2024-06-17" // Substitua com a lógica real para obter a data atual
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+            return current.format(formatter)
         }
     }
 }
