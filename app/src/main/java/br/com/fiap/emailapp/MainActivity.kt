@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,13 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -46,17 +43,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.emailapp.components.Calendar
+import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.model.Email
-import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.EmailDetail
+import br.com.fiap.emailapp.pages.EnviadosScreen
 import br.com.fiap.emailapp.pages.HomeScreen
+import br.com.fiap.emailapp.services.SetEmails
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +77,11 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp(database: EmailDatabase) {
-    //emails que tem queser respondidos marcados para ver depois e ter um notification para nao se esuqeça de ver esses emails
     val context = LocalContext.current
     val repository = EmailRepository(context)
-    var emailList by remember { mutableStateOf(listOf<Email>()) }
-    emailList = repository.listarEmails()
+    SetEmails(repository) //emails anteriores apagados e emails novos salvos no repositório para teste
+    val emailListViewModel = EmailListViewModel(repository)
+    emailListViewModel.buscarEmails()
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -94,45 +91,46 @@ fun MyApp(database: EmailDatabase) {
         drawerState = drawerState,
         drawerContent = {
                 DrawerContent(navController, drawerState, scope)
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("Email App") },
-                        navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
-                            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Email App") },
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
                         }
-                    )
+                    }
+                )
+            }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = "home",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable("home") {
+                    HomeScreen(navController, emailListViewModel, repository)
+
                 }
-            ) {innerPadding ->
-                NavHost(
-                    navController = navController,
-                    startDestination = "home",
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    composable("home") {
-                        emailList = HomeScreen(navController, emailList, repository)
+                composable("details/{emailId}") {
+                    val emailId = it.arguments?.getString("emailId")?.toLongOrNull()
+                    val email = emailListViewModel.emailList.value.find{ it.id == emailId }
+                    if (email != null) {
+                        EmailDetail(email, navController, repository)
+                    }
 
-                    }
-                    composable("details/{emailId}") {
-                        val emailId = it.arguments?.getString("emailId")?.toLongOrNull()
-                        val email = emailList.find { it.id == emailId }
-                        if (email != null){
-                            EmailDetail(email, navController, repository)
-                        }
-    
-                    }
-                    composable("calendar") {
-                        Calendar()
-
-                    }
+                }
+                composable("calendar") {
+                    Calendar()
+                }
+                composable("enviados") {
+                    EnviadosScreen(emailListViewModel, repository, navController)
                 }
             }
         }
-    )
+    }
 }
 @Composable
 fun DrawerContent(navController: NavHostController, drawerState: DrawerState, scope: CoroutineScope) {
@@ -140,15 +138,37 @@ fun DrawerContent(navController: NavHostController, drawerState: DrawerState, sc
     val currentDestination = currentBackStackEntry?.destination?.route
     Column(
         modifier = Modifier
-            .fillMaxSize(4 / 5f)
+            .fillMaxSize(0.5f)
             .background(Color.White)
     ) {
-        Text("Navigation", style = MaterialTheme.typography.headlineLarge)
+        Text("Email App", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
         Spacer(modifier = Modifier.height(8.dp))
-        DrawerItem("Emails", navController, "home", drawerState, scope, "home" === currentDestination)
-        DrawerItem("Calendário", navController, "calendar", drawerState, scope, "calendar" === currentDestination)
+        DrawerItem(
+            "Emails",
+            navController,
+            "home",
+            drawerState,
+            scope,
+            "home" === currentDestination
+        )
+        DrawerItem(
+            "Calendário",
+            navController,
+            "calendar",
+            drawerState,
+            scope,
+            "calendar" === currentDestination
+        )
+        DrawerItem(
+            "Enviados",
+            navController,
+            "enviados",
+            drawerState,
+            scope,
+            "enviados" === currentDestination
+        )
     }
 }
 
@@ -161,8 +181,9 @@ fun DrawerItem(
     scope: CoroutineScope,
     isActive: Boolean
 ) {
-    val backgroundColor = if (isActive) Color.Gray else Color.Transparent
+    val backgroundColor = if (isActive) MaterialTheme.colorScheme.primary else Color.Transparent
     Text(
+        color = if (isActive) Color.White else Color.Black,
         text = text,
         modifier = Modifier
             .fillMaxWidth()

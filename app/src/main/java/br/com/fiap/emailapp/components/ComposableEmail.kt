@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import br.com.fiap.emailapp.util.formatDate
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isReaded
 import br.com.fiap.emailapp.util.toggleFavorite
@@ -74,7 +75,7 @@ fun EmailComp(
                         )
                     }
                 }
-                Text(text = email.date, fontSize = 15.sp)
+                Text(text = formatDate(email.date), fontSize = 15.sp)
             }
             Text(
                 text = email.title,
