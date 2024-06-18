@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,9 +46,12 @@ fun CalendarScreen() {
 
 @Composable
 fun MonthHeader(yearMonth: YearMonth, daysOfWeek: List<DayOfWeek>) {
+    val locale = Locale("pt", "BR")
+    val month = yearMonth.month.getDisplayName(TextStyle.FULL, locale)
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
     Column {
         Text(
-            text = "${yearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${yearMonth.year}",
+            text = "$month ${yearMonth.year}",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
@@ -57,12 +61,11 @@ fun MonthHeader(yearMonth: YearMonth, daysOfWeek: List<DayOfWeek>) {
         Row(modifier = Modifier.fillMaxWidth()) {
             daysOfWeek.forEach { dayOfWeek ->
                 Text(
-                    text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                    text = dayOfWeek.getDisplayName(TextStyle.SHORT, locale).removeSuffix(".").uppercase(),
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
             }
         }
     }
-
 }
