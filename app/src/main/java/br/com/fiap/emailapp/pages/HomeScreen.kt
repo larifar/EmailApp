@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import br.com.fiap.emailapp.components.EmailButton
 import br.com.fiap.emailapp.components.EmailComp
 import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.components.FilterComp
+import br.com.fiap.emailapp.components.MultipleLabelsMenu
 import br.com.fiap.emailapp.components.MultipleSelection
 import br.com.fiap.emailapp.components.SearchBar
 import br.com.fiap.emailapp.components.SearchButton
@@ -43,19 +45,20 @@ import br.com.fiap.emailapp.util.performSearch
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, repository: EmailRepository): List<Email> {
     viewModel.buscarEmails()
-    var emailList by remember { mutableStateOf(viewModel.emailList.value) }
+    val emailList by viewModel.emailList.collectAsState()
     var filterLabel by remember { mutableStateOf<EmailLabel?>(EmailLabel.PRIMARY) }
     val context = LocalContext.current
     var searchText by remember { mutableStateOf("") }
     var showSearchBar by remember { mutableStateOf(false) }
     var multipleSelection by remember { mutableStateOf(false) }
+    var editMultipleLabels by remember { mutableStateOf(false) }
     var checkedEmails by remember { mutableStateOf(mutableListOf<Email>())}
 
     var filteredEmails by remember { mutableStateOf(emailList) }
 
     LaunchedEffect(searchText, filterLabel, emailList) {
-        filteredEmails = performSearch( listEmails =
-            emailList.filter { email ->
+        filteredEmails = performSearch(
+            listEmails = emailList.filter { email ->
                 filterLabel == null || email.initialLabel.contains(filterLabel)
             }.filterNot { email -> email.sender == "you" },
             query = searchText
@@ -90,10 +93,22 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                         repository.update(updatedEmail)
                     }
                 },
-                onEditLabels = {}
+                onEditLabels = {editMultipleLabels = true}
             )
         }
 
+        if (editMultipleLabels){
+            MultipleLabelsMenu(
+                onDismiss = {editMultipleLabels = false},
+                onUpdate = {
+                    for (email in checkedEmails){
+                        val labels = it.toMutableList()
+                        val updatedEmail = email.copy(initialLabel = labels)
+                        repository.update(updatedEmail)
+                    }
+                }
+            )
+        }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -104,14 +119,14 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                     email = email,
                     onClick = {
                         val updatedEmail = email.copy(isNew = false)
-                        emailList = emailList.map {
+                        filteredEmails = emailList.map {
                             if (it.id == updatedEmail.id) updatedEmail else it
                         }
                         repository.update(updatedEmail)
                         navController.navigate("details/${email.id}")
                     },
                     onToggleFavorite = { updatedEmail ->
-                        emailList = emailList.map {
+                        filteredEmails = emailList.map {
                             if (it.id == updatedEmail.id) updatedEmail else it
                         }
                         repository.update(updatedEmail)
