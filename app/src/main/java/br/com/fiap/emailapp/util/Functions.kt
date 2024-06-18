@@ -7,7 +7,6 @@ import androidx.compose.ui.text.font.FontWeight
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
