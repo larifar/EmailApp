@@ -2,10 +2,8 @@ package br.com.fiap.emailapp.components
 
 import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -45,28 +42,25 @@ fun EmailButton(context: Context) {
         EmailDialog(onDismiss = { showDialog = false }, context)
     }
 
-    Box (modifier = Modifier.fillMaxSize()){
-        IconButton(
-            onClick = { showDialog = true },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(10.dp)
-                .size(60.dp)
-                .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
-                .clip(CircleShape)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.email_icon),
-                contentDescription = "carta",
-                modifier = Modifier.size(30.dp),
-                tint = Color.White
-            )
-        }
+    IconButton(
+        onClick = { showDialog = true },
+        modifier = Modifier
+            .padding(10.dp)
+            .size(60.dp)
+            .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
+            .clip(CircleShape)
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.email_icon),
+            contentDescription = "carta",
+            modifier = Modifier.size(30.dp),
+            tint = Color.White
+        )
     }
 }
 
 @Composable
-fun EmailDialog(onDismiss: () -> Unit, context : Context) {
+fun EmailDialog(onDismiss: () -> Unit, context: Context) {
     var receiver by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
@@ -79,11 +73,11 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
         onDismissRequest = onDismiss,
         title = { Text(text = "Escrever email") },
         text = {
-            Column (
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-            ){
+            ) {
                 TextField(
                     value = receiver,
                     onValueChange = { receiver = it },
@@ -102,7 +96,9 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
                     value = content,
                     onValueChange = { content = it },
                     label = { Text("Conteúdo") },
-                    modifier = Modifier.fillMaxWidth().height(150.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
                 )
             }
         },
@@ -111,7 +107,7 @@ fun EmailDialog(onDismiss: () -> Unit, context : Context) {
                 onClick = {
                     val newEmail = Email(
                         sender = "you",
-                        receiver= receiver,
+                        receiver = receiver,
                         title = title,
                         content = content
                     )
