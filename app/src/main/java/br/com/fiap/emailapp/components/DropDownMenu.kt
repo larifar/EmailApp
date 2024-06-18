@@ -1,5 +1,6 @@
 package br.com.fiap.emailapp.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -61,7 +63,6 @@ fun IconButtonWithDropdownMenu(email: Email, onArchive: (Email) -> Unit, onUpdat
                     expanded = false
                 }
             )
-
         }
     }
     if (showDialog) {
@@ -78,10 +79,14 @@ fun changeLabelsMenu(email: Email, onDismiss: () -> Unit, onUpdate: (Email) -> U
     AlertDialog(onDismissRequest = onDismiss,
         title = { Text(text = "Editar Rótulos") },
         text = {
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
                 availableLabels.forEach { label ->
                     val isChecked = remember { mutableStateOf(selectedLabels.contains(label)) }
-                    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = isChecked.value,
                             onCheckedChange = {
