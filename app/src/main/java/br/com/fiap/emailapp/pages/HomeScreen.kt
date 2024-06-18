@@ -3,6 +3,7 @@ package br.com.fiap.emailapp.pages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +44,7 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
     val context = LocalContext.current
     var searchText by remember { mutableStateOf("") }
     var showSearchBar by remember { mutableStateOf(false) }
+    var multipleSelection by remember { mutableStateOf(false) }
 
     var filteredEmails by remember { mutableStateOf(emailList) }
 
@@ -55,15 +60,40 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        FilterComp(filterLabel, onFilterChange = { newLabel ->
-            filterLabel = newLabel
-        })
+        Row {
+            TextButton(onClick = { multipleSelection = !multipleSelection }) {
+                Text(text = ".")
+            }
+            FilterComp(filterLabel, onFilterChange = { newLabel ->
+                filterLabel = newLabel
+            })
+        }
+
+        if (multipleSelection){
+            Spacer(modifier = Modifier.height(5.dp))
+            Row {
+                Button(onClick = { multipleSelection = !multipleSelection }) {
+                    Text(text = "<-")
+                }
+
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "arquivar")
+                }
+
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "editar rótulos" )
+                }
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+        }
+
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
             items(filteredEmails) { email ->
                 EmailComp(
+                    multipleSelection = multipleSelection,
                     email = email,
                     onClick = {
                         val updatedEmail = email.copy(isNew = false)

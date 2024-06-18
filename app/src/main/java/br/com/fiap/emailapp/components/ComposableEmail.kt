@@ -36,15 +36,12 @@ fun EmailComp(
     email: Email,
     onToggleFavorite: (Email) -> Unit,
     onToggleChecked: (Email, Boolean) -> Unit,
-    multipleSelection: Boolean = false,
+    multipleSelection: Boolean,
     repository: EmailRepository,
     onClick: () -> Unit
 ) {
     var label by remember { mutableStateOf(email.initialLabel) }
     var isChecked by remember { mutableStateOf(false) }
-    var multipleSelection by remember {
-        mutableStateOf(false)
-    }
 
     Box(modifier = Modifier
         .fillMaxWidth()
