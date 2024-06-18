@@ -66,3 +66,14 @@ fun performSearch(query: String, listEmails: List<Email>) : List<Email>{
                 email.title.lowercase().contains(lowerCaseQuery)
     }
 }
+
+fun EmailLabel.toPortuguese(): String {
+    return when (this) {
+        EmailLabel.PRIMARY -> "Principal"
+        EmailLabel.SOCIAL -> "Social"
+        EmailLabel.PROMOTIONS -> "Promoções"
+        EmailLabel.UPDATES -> "Atualizações"
+        EmailLabel.FORUMS -> "Fóruns"
+        EmailLabel.FAVORITE -> "Favoritos"
+    }
+}

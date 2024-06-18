@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
+import br.com.fiap.emailapp.util.toPortuguese
 
 @Composable
 fun IconButtonWithDropdownMenu(email: Email, onArchive: (Email) -> Unit, onUpdate: (Email) -> Unit) {
@@ -98,7 +99,7 @@ fun changeLabelsMenu(email: Email, onDismiss: () -> Unit, onUpdate: (Email) -> U
                                 }
                             }
                         )
-                        Text(text = label.name)
+                        Text(text = label.toPortuguese().uppercase())
                     }
                 }
             }
