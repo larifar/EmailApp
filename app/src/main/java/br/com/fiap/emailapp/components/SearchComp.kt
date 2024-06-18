@@ -46,7 +46,7 @@ fun SearchButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun SearchBar(onClose: () -> Unit, value: String, onValueChange: (String) -> Unit) {
+fun SearchBar(onClose: () -> Unit, value: String, onValueChange: (String) -> Unit, onSearch: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -64,9 +64,7 @@ fun SearchBar(onClose: () -> Unit, value: String, onValueChange: (String) -> Uni
                 .background(Color.Transparent, shape = RoundedCornerShape(30.dp)),
             shape = RoundedCornerShape(10)
         )
-        SearchButton {
-
-        }
+        SearchButton (onClick = onSearch)
     }
 }
 
