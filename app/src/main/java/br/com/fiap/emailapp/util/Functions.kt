@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import br.com.fiap.emailapp.R
+import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -52,5 +53,17 @@ fun formatDate(date: String): String{
             // Anos diferentes
             dateTime.format(DateTimeFormatter.ofPattern("MM-yyyy"))
         }
+    }
+}
+
+fun performSearch(query: String, listEmails: List<Email>) : List<Email>{
+    if (query.isBlank()) {
+        return listEmails
+    }
+    val lowerCaseQuery = query.lowercase()
+    return listEmails.filter { email ->
+        email.sender.lowercase().contains(lowerCaseQuery) ||
+                email.content.lowercase().contains(lowerCaseQuery) ||
+                email.title.lowercase().contains(lowerCaseQuery)
     }
 }
