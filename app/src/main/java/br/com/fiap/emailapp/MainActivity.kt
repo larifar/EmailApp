@@ -44,6 +44,7 @@ import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.pages.ArquivadosScreen
+import br.com.fiap.emailapp.pages.CalendarScreen
 import br.com.fiap.emailapp.pages.EmailDetail
 import br.com.fiap.emailapp.pages.EnviadosScreen
 import br.com.fiap.emailapp.pages.HomeScreen
@@ -120,7 +121,7 @@ fun MyApp(database: EmailDatabase) {
 
                 }
                 composable("calendar") {
-                    Calendar()
+                    CalendarScreen()
                 }
                 composable("enviados") {
                     EnviadosScreen(emailListViewModel, repository, navController)
