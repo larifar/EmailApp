@@ -1,45 +1,68 @@
 package br.com.fiap.emailapp.pages
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import br.com.fiap.emailapp.components.Day
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import java.time.DayOfWeek
 import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun CalendarScreen() {
     val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
-    val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
-    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() } // Available from the library
-
+    val startMonth = remember { currentMonth.minusMonths(10) }
+    val endMonth = remember { currentMonth.plusMonths(10) }
     val state = rememberCalendarState(
         startMonth = startMonth,
         endMonth = endMonth,
         firstVisibleMonth = currentMonth,
-        firstDayOfWeek = firstDayOfWeek
+        firstDayOfWeek = DayOfWeek.MONDAY,
     )
 
     HorizontalCalendar(
         state = state,
-        dayContent = { Day(it) }
+        dayContent = { Day(it) },
+        monthHeader = { month ->
+            val daysOfWeek = remember { month.weekDays.first().map { it.date.dayOfWeek } }
+            MonthHeader(month.yearMonth, daysOfWeek)
+        }
     )
 }
 
 @Composable
-fun Day(day: CalendarDay) {
-    Box(
-        modifier = Modifier
-            .aspectRatio(1f), // This is important for square sizing!
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = day.date.dayOfMonth.toString())
+fun MonthHeader(yearMonth: YearMonth, daysOfWeek: List<DayOfWeek>) {
+    Column {
+        Text(
+            text = "${yearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${yearMonth.year}",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            daysOfWeek.forEach { dayOfWeek ->
+                Text(
+                    text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
+
 }

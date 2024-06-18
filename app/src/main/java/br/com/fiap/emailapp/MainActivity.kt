@@ -39,7 +39,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import br.com.fiap.emailapp.components.Calendar
 import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.repository.EmailRepository
