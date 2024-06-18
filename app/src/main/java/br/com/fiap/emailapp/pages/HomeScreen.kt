@@ -79,6 +79,10 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                         }
                         repository.update(updatedEmail)
                     },
+                    onToggleChecked = { updatedEmail, isChecked ->
+                        // Lógica para quando a checkbox é alterada
+                        // Você pode armazenar ou processar o estado do email conforme necessário
+                    },
                     repository = repository
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
