@@ -1,6 +1,5 @@
 package br.com.fiap.emailapp.pages
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,17 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,8 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -41,6 +32,7 @@ import br.com.fiap.emailapp.components.EmailButton
 import br.com.fiap.emailapp.components.EmailComp
 import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.components.FilterComp
+import br.com.fiap.emailapp.components.MultipleSelection
 import br.com.fiap.emailapp.components.SearchBar
 import br.com.fiap.emailapp.components.SearchButton
 import br.com.fiap.emailapp.database.model.Email
@@ -57,6 +49,7 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
     var searchText by remember { mutableStateOf("") }
     var showSearchBar by remember { mutableStateOf(false) }
     var multipleSelection by remember { mutableStateOf(false) }
+    var checkedEmails by remember { mutableStateOf(mutableListOf<Email>())}
 
     var filteredEmails by remember { mutableStateOf(emailList) }
 
@@ -88,49 +81,17 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
         }
 
         if (multipleSelection){
-            Spacer(modifier = Modifier.height(5.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ){
-                IconButton(
-                    onClick = { multipleSelection = !multipleSelection },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary, CircleShape).clip(
-                        CircleShape)
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.return_icon),
-                        contentDescription = "voltar",
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                IconButton(
-                    onClick = {  },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary, CircleShape).clip(
-                        CircleShape)
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.archive_icon),
-                        contentDescription = "arquivar",
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                IconButton(
-                    onClick = {  },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary, CircleShape).clip(
-                        CircleShape)
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.label_edit_icon),
-                        contentDescription = "editar rótulos",
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(5.dp))
+            MultipleSelection(
+                onReturn = {multipleSelection = !multipleSelection},
+                onArchive = {
+                    for (email in checkedEmails){
+                        val labels = email.initialLabel.filterNot { it == EmailLabel.PRIMARY }.toMutableList()
+                        val updatedEmail = email.copy(isArchived = true, initialLabel = labels)
+                        repository.update(updatedEmail)
+                    }
+                },
+                onEditLabels = {}
+            )
         }
 
 
@@ -156,8 +117,11 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                         repository.update(updatedEmail)
                     },
                     onToggleChecked = { updatedEmail, isChecked ->
-                        // Lógica para quando a checkbox é alterada
-                        // Você pode armazenar ou processar o estado do email conforme necessário
+                        if (isChecked){
+                            checkedEmails.add(updatedEmail)
+                        } else{
+                            checkedEmails.remove(updatedEmail)
+                        }
                     },
                     repository = repository
                 )
