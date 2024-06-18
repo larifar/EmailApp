@@ -7,7 +7,6 @@ import androidx.compose.ui.text.font.FontWeight
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -65,5 +64,16 @@ fun performSearch(query: String, listEmails: List<Email>) : List<Email>{
         email.sender.lowercase().contains(lowerCaseQuery) ||
                 email.content.lowercase().contains(lowerCaseQuery) ||
                 email.title.lowercase().contains(lowerCaseQuery)
+    }
+}
+
+fun EmailLabel.toPortuguese(): String {
+    return when (this) {
+        EmailLabel.PRIMARY -> "Principal"
+        EmailLabel.SOCIAL -> "Social"
+        EmailLabel.PROMOTIONS -> "Promoções"
+        EmailLabel.UPDATES -> "Atualizações"
+        EmailLabel.FORUMS -> "Fóruns"
+        EmailLabel.FAVORITE -> "Favoritos"
     }
 }

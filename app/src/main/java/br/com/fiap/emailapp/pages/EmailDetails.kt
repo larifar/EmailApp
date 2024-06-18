@@ -45,10 +45,11 @@ fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email 
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButtonWithDropdownMenu(email) { updatedEmail ->
+            IconButtonWithDropdownMenu(email, onArchive = {updatedEmail ->
                 emailState = updatedEmail
-                repo.update(updatedEmail)
-            }
+                repo.update(updatedEmail)}, onUpdate = {updatedEmail ->
+                emailState = updatedEmail
+                repo.update(updatedEmail)})
             Column{
                 Text(
                     text = email.title,

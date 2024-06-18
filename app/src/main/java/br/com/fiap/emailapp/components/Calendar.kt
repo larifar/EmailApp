@@ -37,13 +37,13 @@ fun Day(day: CalendarDay) {
 @Composable
 fun changeDayColor(day: CalendarDay): Color {
     val currentMonth = YearMonth.now()
-    if (day.date.dayOfMonth == LocalDate.now().dayOfMonth && day.date.month == currentMonth.month) {
-        return MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    return if (day.date.dayOfMonth == LocalDate.now().dayOfMonth && day.date.month == currentMonth.month) {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     }else if (day.date.month == currentMonth.month){
-        return MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
     }
     else {
-       return MaterialTheme.colorScheme.background // Cor de fundo padrão
+        MaterialTheme.colorScheme.background // Cor de fundo padrão
     }
 }
 
