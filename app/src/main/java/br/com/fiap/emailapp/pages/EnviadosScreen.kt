@@ -45,6 +45,8 @@ fun EnviadosScreen(
                     EmailComp(
                         email = email,
                         onToggleFavorite = {},
+                        onToggleChecked = {email, b ->  },
+                        multipleSelection = false,
                         repository,
                         onClick = { navController.navigate("details/${email.id}") }
                     )

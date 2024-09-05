@@ -1,23 +1,23 @@
 package br.com.fiap.emailapp.components
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class EmailListViewModel(private val repository: EmailRepository) : ViewModel() {
 
-    private val _emailList = mutableStateOf(listOf<Email>())
-    val emailList: State<List<Email>> = _emailList
+    private val _emailList = MutableStateFlow(listOf<Email>())
+    val emailList: StateFlow<List<Email>> = _emailList
 
-    private val _enviados = mutableStateOf(mutableListOf<Email>())
-    val enviados: State<List<Email>> = _enviados
+    private val _enviados = MutableStateFlow(mutableListOf<Email>())
+    val enviados: StateFlow<List<Email>> = _enviados
 
-    private val _arquivados = mutableStateOf(listOf<Email>())
-    val arquivados: State<List<Email>> = _arquivados
+    private val _arquivados = MutableStateFlow(listOf<Email>())
+    val arquivados: StateFlow<List<Email>> = _arquivados
 
     fun buscarEmails() {
         viewModelScope.launch {

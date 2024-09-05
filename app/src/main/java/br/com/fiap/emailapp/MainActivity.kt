@@ -47,7 +47,7 @@ import br.com.fiap.emailapp.pages.CalendarScreen
 import br.com.fiap.emailapp.pages.EmailDetail
 import br.com.fiap.emailapp.pages.EnviadosScreen
 import br.com.fiap.emailapp.pages.HomeScreen
-import br.com.fiap.emailapp.services.SetEmails
+import br.com.fiap.emailapp.services.populateDatabase
 import br.com.fiap.emailapp.ui.theme.EmailAppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
 fun MyApp(database: EmailDatabase) {
     val context = LocalContext.current
     val repository = EmailRepository(context)
-    SetEmails(repository) //emails anteriores apagados e emails novos salvos no repositório para teste
+    populateDatabase(repository)
     val emailListViewModel = EmailListViewModel(repository)
     emailListViewModel.buscarEmails()
 
