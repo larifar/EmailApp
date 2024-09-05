@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import br.com.fiap.emailapp.util.changeisReadedColor
 import br.com.fiap.emailapp.util.formatDate
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isReaded
@@ -71,6 +72,7 @@ fun EmailComp(
                         Text(
                             text = email.sender,
                             fontWeight = isReaded(email.isNew),
+                            color= changeisReadedColor(email.isNew),
                             fontSize = 17.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -91,17 +93,19 @@ fun EmailComp(
                             )
                         }
                     }
-                    Text(text = formatDate(email.date), fontSize = 15.sp)
+                    Text(text = formatDate(email.date), color= changeisReadedColor(email.isNew), fontSize = 15.sp)
                 }
                 Text(
                     text = email.title,
                     fontWeight = isReaded(email.isNew),
+                    color= changeisReadedColor(email.isNew),
                     fontSize = 17.5.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = email.content,
+                    color= changeisReadedColor(email.isNew),
                     maxLines = 1,
                     fontSize = 16.sp,
                     overflow = TextOverflow.Ellipsis

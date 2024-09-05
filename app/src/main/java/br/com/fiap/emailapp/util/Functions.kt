@@ -1,6 +1,7 @@
 package br.com.fiap.emailapp.util
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +23,11 @@ import java.time.format.DateTimeFormatter
 fun isReaded(bol : Boolean) : FontWeight{
     return if (bol) FontWeight.Bold
     else FontWeight.Medium
+}
+
+fun changeisReadedColor(bol : Boolean) : Color {
+    return if (!bol) Color.Black.copy(alpha = 0.65f)
+    else Color.Black
 }
 
 fun toggleFavorite(labels: MutableList<EmailLabel>): MutableList<EmailLabel> {

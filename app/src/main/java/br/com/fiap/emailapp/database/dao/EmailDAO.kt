@@ -3,6 +3,7 @@ package br.com.fiap.emailapp.database.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import br.com.fiap.emailapp.database.model.Email
@@ -26,4 +27,10 @@ interface EmailDAO {
 
     @Query("SELECT * FROM TBL_EMAILS")
     fun listarEmails(): MutableList<Email>
+
+    @Query("SELECT COUNT(*) FROM TBL_EMAILS")
+    fun countEmails(): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(emails: List<Email>)
 }

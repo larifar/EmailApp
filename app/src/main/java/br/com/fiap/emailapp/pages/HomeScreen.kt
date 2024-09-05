@@ -130,6 +130,7 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                             if (it.id == updatedEmail.id) updatedEmail else it
                         }
                         repository.update(updatedEmail)
+                        viewModel.buscarEmails()
                     },
                     onToggleChecked = { updatedEmail, isChecked ->
                         if (isChecked){
