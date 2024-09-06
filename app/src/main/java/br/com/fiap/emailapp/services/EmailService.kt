@@ -1,7 +1,5 @@
 package br.com.fiap.emailapp.services
 
-import androidx.compose.runtime.Composable
-import br.com.fiap.emailapp.database.dao.EmailDAO
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository

@@ -40,8 +40,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.emailapp.components.EmailListViewModel
+import br.com.fiap.emailapp.components.ReminderViewModel
 import br.com.fiap.emailapp.database.dao.EmailDatabase
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import br.com.fiap.emailapp.database.repository.ReminderRepository
 import br.com.fiap.emailapp.pages.ArquivadosScreen
 import br.com.fiap.emailapp.pages.CalendarScreen
 import br.com.fiap.emailapp.pages.EmailDetail
@@ -77,6 +79,8 @@ fun MyApp(database: EmailDatabase) {
     val context = LocalContext.current
     val repository = EmailRepository(context)
     populateDatabase(repository)
+    val reminderRepository = ReminderRepository(context)
+    val reminderViewModel = ReminderViewModel(reminderRepository)
     val emailListViewModel = EmailListViewModel(repository)
     emailListViewModel.buscarEmails()
 
@@ -120,7 +124,7 @@ fun MyApp(database: EmailDatabase) {
 
                 }
                 composable("calendar") {
-                    CalendarScreen()
+                    CalendarScreen(reminderViewModel)
                 }
                 composable("enviados") {
                     EnviadosScreen(emailListViewModel, repository, navController)
