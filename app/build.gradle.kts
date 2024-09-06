@@ -76,4 +76,5 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("com.kizitonwose.calendar:compose:2.5.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5")
 }

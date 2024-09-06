@@ -7,11 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import br.com.fiap.emailapp.database.model.Converters
 import br.com.fiap.emailapp.database.model.Email
+import br.com.fiap.emailapp.database.model.Reminder
 
-@Database(entities = [Email::class], version = 2, exportSchema = false)
+@Database(entities = [Email::class, Reminder::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class EmailDatabase : RoomDatabase() {
     abstract fun EmailDAO(): EmailDAO
+    abstract fun ReminderDAO(): ReminderDAO
 
     companion object {
 
