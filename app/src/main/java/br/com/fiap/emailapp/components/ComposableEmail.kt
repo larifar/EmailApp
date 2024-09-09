@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
-import br.com.fiap.emailapp.util.changeisReadedColor
+import br.com.fiap.emailapp.util.changeIsReadColor
 import br.com.fiap.emailapp.util.formatDate
 import br.com.fiap.emailapp.util.isFavorite
-import br.com.fiap.emailapp.util.isReaded
+import br.com.fiap.emailapp.util.isRead
 import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
@@ -41,6 +42,7 @@ fun EmailComp(
     repository: EmailRepository,
     onClick: () -> Unit
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     var label by remember { mutableStateOf(email.initialLabel) }
     var isChecked by remember { mutableStateOf(false) }
 
@@ -71,8 +73,8 @@ fun EmailComp(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = email.sender,
-                            fontWeight = isReaded(email.isNew),
-                            color= changeisReadedColor(email.isNew),
+                            fontWeight = isRead(email.isNew),
+                            color= changeIsReadColor(email.isNew, colorScheme),
                             fontSize = 17.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -93,19 +95,19 @@ fun EmailComp(
                             )
                         }
                     }
-                    Text(text = formatDate(email.date), color= changeisReadedColor(email.isNew), fontSize = 15.sp)
+                    Text(text = formatDate(email.date), color= changeIsReadColor(email.isNew, colorScheme), fontSize = 15.sp)
                 }
                 Text(
                     text = email.title,
-                    fontWeight = isReaded(email.isNew),
-                    color= changeisReadedColor(email.isNew),
+                    fontWeight = isRead(email.isNew),
+                    color= changeIsReadColor(email.isNew, colorScheme),
                     fontSize = 17.5.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = email.content,
-                    color= changeisReadedColor(email.isNew),
+                    color= changeIsReadColor(email.isNew, colorScheme),
                     maxLines = 1,
                     fontSize = 16.sp,
                     overflow = TextOverflow.Ellipsis

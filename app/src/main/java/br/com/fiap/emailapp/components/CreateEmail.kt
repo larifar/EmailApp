@@ -32,6 +32,7 @@ import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 @Composable
@@ -109,7 +110,8 @@ fun EmailDialog(onDismiss: () -> Unit, context: Context) {
                         sender = "you",
                         receiver = receiver,
                         title = title,
-                        content = content
+                        content = content,
+                        date = LocalDate.now()
                     )
                     scope.launch {
                         emailRepository.salvar(newEmail)

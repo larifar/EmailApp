@@ -1,4 +1,4 @@
-package br.com.fiap.emailapp.components
+package br.com.fiap.emailapp.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

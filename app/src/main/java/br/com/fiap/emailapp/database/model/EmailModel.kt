@@ -3,7 +3,7 @@ package br.com.fiap.emailapp.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 enum class EmailLabel {
@@ -48,22 +48,22 @@ data class Email(
         receiver: String,
         title: String,
         content: String,
+        date: LocalDate
     ) : this(
         id = 0,
         sender = sender,
         receiver = receiver,
         title = title,
         content = content,
-        date = getCurrentDate(),
+        date = getDate(date),
         isNew = false,
         initialLabel = mutableListOf()
     )
 
     companion object {
-        private fun getCurrentDate(): String {
-            val current = LocalDateTime.now()
+        private fun getDate(date: LocalDate): String {
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
-            return current.format(formatter)
+            return date.format(formatter)
         }
     }
 }

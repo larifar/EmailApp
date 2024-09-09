@@ -31,7 +31,7 @@ import androidx.navigation.NavHostController
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.components.EmailButton
 import br.com.fiap.emailapp.components.EmailComp
-import br.com.fiap.emailapp.components.EmailListViewModel
+import br.com.fiap.emailapp.view.EmailListViewModel
 import br.com.fiap.emailapp.components.FilterComp
 import br.com.fiap.emailapp.components.MultipleLabelsMenu
 import br.com.fiap.emailapp.components.MultipleSelection

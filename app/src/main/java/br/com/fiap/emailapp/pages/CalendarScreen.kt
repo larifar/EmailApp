@@ -18,7 +18,7 @@ import br.com.fiap.emailapp.components.Day
 import br.com.fiap.emailapp.components.MonthHeader
 import br.com.fiap.emailapp.components.ReminderDialog
 import br.com.fiap.emailapp.components.ReminderItem
-import br.com.fiap.emailapp.components.ReminderViewModel
+import br.com.fiap.emailapp.view.ReminderViewModel
 import br.com.fiap.emailapp.database.model.Reminder
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState

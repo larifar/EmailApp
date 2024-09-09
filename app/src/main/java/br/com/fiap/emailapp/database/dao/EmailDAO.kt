@@ -28,6 +28,9 @@ interface EmailDAO {
     @Query("SELECT * FROM TBL_EMAILS")
     fun listarEmails(): MutableList<Email>
 
+    @Query("SELECT * FROM TBL_EMAILS WHERE sender = :sender ")
+    fun listarEmailsEnviados(sender: String = "you"): List<Email>
+
     @Query("SELECT COUNT(*) FROM TBL_EMAILS")
     fun countEmails(): Int
 

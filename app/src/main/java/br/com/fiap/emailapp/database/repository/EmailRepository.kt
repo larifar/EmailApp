@@ -39,4 +39,8 @@ class EmailRepository(context: Context) {
     fun listarEmails(): List<Email>{
         return db.listarEmails()
     }
+
+    fun listarEmailsEnviados(): List<Email>{
+        return db.listarEmailsEnviados()
+    }
 }
