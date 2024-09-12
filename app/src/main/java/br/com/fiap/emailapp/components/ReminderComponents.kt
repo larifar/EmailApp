@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,7 +87,7 @@ fun ReminderItem(reminder: Reminder, onDelete: ()->Unit){
     Row(
         modifier = Modifier
             .fillMaxWidth().clip(RoundedCornerShape(8.dp))
-            .background(color = Color.Yellow.copy(alpha = 0.3f)),
+            .background(color = MaterialTheme.colorScheme.tertiary.copy(.25f)),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ){

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +32,9 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.emailapp.R
 import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import br.com.fiap.emailapp.services.SpamControl
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 
 @Composable
@@ -59,11 +62,15 @@ fun EmailButton(context: Context) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailDialog(onDismiss: () -> Unit, context: Context) {
     var receiver by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
+    var showSpamAlert by remember {
+        mutableStateOf(false)
+    }
 
     val scope = rememberCoroutineScope()
     val emailRepository = EmailRepository(context)
@@ -109,12 +116,18 @@ fun EmailDialog(onDismiss: () -> Unit, context: Context) {
                         sender = "you",
                         receiver = receiver,
                         title = title,
-                        content = content
+                        content = content,
+                        date = LocalDateTime.now()
                     )
-                    scope.launch {
-                        emailRepository.salvar(newEmail)
-                        onDismiss()
+                    if (SpamControl(emailRepository).spamAlert(newEmail)){
+                            showSpamAlert = true
+                    } else{
+                        scope.launch {
+                            emailRepository.salvar(newEmail)
+                            onDismiss()
+                        }
                     }
+                    
                 }
             ) {
                 Text("Enviar")
@@ -126,6 +139,22 @@ fun EmailDialog(onDismiss: () -> Unit, context: Context) {
             }
         }
     )
+    
+    if (showSpamAlert){
+        AlertDialog(
+            onDismissRequest = { showSpamAlert = false },
+            confirmButton = { Button(
+                onClick = {
+                    showSpamAlert = false
+                    onDismiss()
+                }
+            ) {
+                Text("Cancelar")
+            } },
+            title = { Text(text = "Alerta de Spam") },
+            text = { Text(text = "O conteúdo deste e-mail foi analisado como spam.")}
+        )
+    }
 }
 
 

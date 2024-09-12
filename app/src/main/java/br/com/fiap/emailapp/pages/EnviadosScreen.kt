@@ -13,13 +13,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.com.fiap.emailapp.components.EmailComp
-import br.com.fiap.emailapp.components.EmailListViewModel
 import br.com.fiap.emailapp.database.repository.EmailRepository
+import br.com.fiap.emailapp.view.EmailListViewModel
 
 @Composable
 fun EnviadosScreen(
     viewModel: EmailListViewModel,
-    repository: EmailRepository,
     navController: NavHostController
 ) {
     viewModel.buscarEmails()
@@ -47,7 +46,6 @@ fun EnviadosScreen(
                         onToggleFavorite = {},
                         onToggleChecked = {email, b ->  },
                         multipleSelection = false,
-                        repository,
                         onClick = { navController.navigate("details/${email.id}") }
                     )
                 }

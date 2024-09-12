@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import br.com.fiap.emailapp.components.EmailComp
-import br.com.fiap.emailapp.components.EmailListViewModel
+import br.com.fiap.emailapp.view.EmailListViewModel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 
 @Composable
@@ -46,7 +46,6 @@ fun ArquivadosScreen(
                         onToggleFavorite = {},
                         onToggleChecked = {email, b ->  },
                         multipleSelection= false,
-                        repository,
                         onClick = { navController.navigate("details/${email.id}") }
                     )
                 }

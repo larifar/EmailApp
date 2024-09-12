@@ -1,5 +1,6 @@
 package br.com.fiap.emailapp.util
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -12,32 +13,36 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-    fun isFavorite(labels: List<EmailLabel>): ImageVector {
-        return if (labels.contains(EmailLabel.FAVORITE)) {
+    fun isFavorite(boolean: Boolean): ImageVector {
+        return if (boolean) {
             ImageVector.vectorResource(id = R.drawable.favorite_star)
         } else {
             ImageVector.vectorResource(id = R.drawable.star_outline)
         }
     }
 
-fun isReaded(bol : Boolean) : FontWeight{
+fun toggleFavorite(email :Email) : Email{
+    val updatedLabels = if (email.isFavorite) {
+        email.initialLabel.toMutableList().apply { remove(EmailLabel.FAVORITE) }
+    } else {
+        email.initialLabel.toMutableList().apply { add(EmailLabel.FAVORITE) }
+    }
+
+    val updatedEmail = email.copy(
+        isFavorite = !email.isFavorite,
+        initialLabel = updatedLabels
+    )
+    return updatedEmail
+}
+
+fun isRead(bol : Boolean) : FontWeight{
     return if (bol) FontWeight.Bold
     else FontWeight.Medium
 }
 
-fun changeisReadedColor(bol : Boolean) : Color {
-    return if (!bol) Color.Black.copy(alpha = 0.65f)
-    else Color.Black
-}
-
-fun toggleFavorite(labels: MutableList<EmailLabel>): MutableList<EmailLabel> {
-    val newLabels = labels.toMutableList()
-    if (newLabels.contains(EmailLabel.FAVORITE)) {
-        newLabels.remove(EmailLabel.FAVORITE)
-    } else {
-        newLabels.add(EmailLabel.FAVORITE)
-    }
-    return newLabels
+fun changeIsReadColor(bol : Boolean, colorScheme: ColorScheme) : Color {
+    return if (!bol) colorScheme.onPrimary.copy(alpha = 0.65f)
+    else colorScheme.onPrimary
 }
 
 fun formatDate(date: String): String{
@@ -78,7 +83,6 @@ fun EmailLabel.toPortuguese(): String {
         EmailLabel.PRIMARY -> "Principal"
         EmailLabel.SOCIAL -> "Social"
         EmailLabel.PROMOTIONS -> "Promoções"
-        EmailLabel.UPDATES -> "Atualizações"
         EmailLabel.FORUMS -> "Fóruns"
         EmailLabel.FAVORITE -> "Favoritos"
     }

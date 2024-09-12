@@ -48,7 +48,7 @@ fun Day(day: CalendarDay, displayMonth: YearMonth, onClick: ()->Unit, reminderLi
                 onClick()
             }
             .then(if (hasReminder) Modifier.border(color = Color.Yellow, width = 2.dp, shape = CircleShape) else Modifier)
-            .then(if (day.date == LocalDate.now())Modifier.border(color = Color.Red, width = 2.dp, shape = CircleShape) else Modifier)
+
     ) {
         Text(text = day.date.dayOfMonth.toString())
     }
@@ -58,7 +58,7 @@ fun Day(day: CalendarDay, displayMonth: YearMonth, onClick: ()->Unit, reminderLi
 fun changeDayColor(day: CalendarDay, displayMonth: YearMonth): Color {
     val today = LocalDate.now()
     return when {
-        day.date == today -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) // Cor para o dia atual
+        day.date == today -> MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) // Cor para o dia atual
         day.date.month == today.month -> MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) // Cor para outros dias do mês atual
         day.date.month == displayMonth.month -> MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) // Cor para dias do mês exibido
         else -> MaterialTheme.colorScheme.background // Cor de fundo padrão

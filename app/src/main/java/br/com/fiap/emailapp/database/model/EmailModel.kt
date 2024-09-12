@@ -10,10 +10,8 @@ enum class EmailLabel {
     PRIMARY,
     SOCIAL,
     PROMOTIONS,
-    UPDATES,
     FORUMS,
     FAVORITE
-
 }
 interface IEmail{
     val id: Long
@@ -24,6 +22,7 @@ interface IEmail{
     val date: String
     val isArchived: Boolean
     val isNew: Boolean
+    val isFavorite: Boolean
     val initialLabel: MutableList<EmailLabel>
 }
 
@@ -40,6 +39,8 @@ data class Email(
     override val isNew: Boolean,
     @ColumnInfo(name = "is_archived")
     override var isArchived: Boolean = false,
+    @ColumnInfo(name = "is_favorite")
+    override var isFavorite: Boolean = false,
     @ColumnInfo(name = "initial_label")
     override val initialLabel: MutableList<EmailLabel>
 ) : IEmail{
@@ -48,22 +49,22 @@ data class Email(
         receiver: String,
         title: String,
         content: String,
+        date: LocalDateTime
     ) : this(
         id = 0,
         sender = sender,
         receiver = receiver,
         title = title,
         content = content,
-        date = getCurrentDate(),
-        isNew = false,
+        date = getDate(date),
+        isNew = true,
         initialLabel = mutableListOf()
     )
 
     companion object {
-        private fun getCurrentDate(): String {
-            val current = LocalDateTime.now()
+        private fun getDate(date: LocalDateTime): String {
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
-            return current.format(formatter)
+            return date.format(formatter)
         }
     }
 }
