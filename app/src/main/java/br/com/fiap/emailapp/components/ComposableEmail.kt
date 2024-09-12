@@ -24,14 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import br.com.fiap.emailapp.database.model.Email
-import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.util.changeIsReadColor
 import br.com.fiap.emailapp.util.formatDate
 import br.com.fiap.emailapp.util.isFavorite
 import br.com.fiap.emailapp.util.isRead
-import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
 fun EmailComp(
@@ -39,11 +36,9 @@ fun EmailComp(
     onToggleFavorite: (Email) -> Unit,
     onToggleChecked: (Email, Boolean) -> Unit,
     multipleSelection: Boolean,
-    repository: EmailRepository,
     onClick: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    var label by remember { mutableStateOf(email.initialLabel) }
     var isChecked by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
@@ -72,36 +67,37 @@ fun EmailComp(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
+                            style = MaterialTheme.typography.bodyLarge,
                             text = email.sender,
                             fontWeight = isRead(email.isNew),
                             color= changeIsReadColor(email.isNew, colorScheme),
-                            fontSize = 17.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                         IconButton(
                             onClick = {
-                                label = toggleFavorite(label)
-                                val updatedEmail = email.copy(initialLabel = label)
-                                onToggleFavorite(updatedEmail)
-                                repository.update(updatedEmail)
+                                onToggleFavorite(email)
                             }
                         ) {
                             Icon(
                                 modifier = Modifier.size(20.dp),
-                                imageVector = isFavorite(labels = label),
+                                imageVector = isFavorite(email.isFavorite),
                                 contentDescription = "Favorite Icon",
                                 tint = Color.Yellow,
                             )
                         }
                     }
-                    Text(text = formatDate(email.date), color= changeIsReadColor(email.isNew, colorScheme), fontSize = 15.sp)
+                    Text(
+                        text = formatDate(email.date),
+                        color = changeIsReadColor(email.isNew, colorScheme),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
                 Text(
                     text = email.title,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = isRead(email.isNew),
                     color= changeIsReadColor(email.isNew, colorScheme),
-                    fontSize = 17.5.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -109,7 +105,7 @@ fun EmailComp(
                     text = email.content,
                     color= changeIsReadColor(email.isNew, colorScheme),
                     maxLines = 1,
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis
                 )
             }

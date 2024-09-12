@@ -3,17 +3,15 @@ package br.com.fiap.emailapp.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 enum class EmailLabel {
     PRIMARY,
     SOCIAL,
     PROMOTIONS,
-    UPDATES,
     FORUMS,
     FAVORITE
-
 }
 interface IEmail{
     val id: Long
@@ -24,6 +22,7 @@ interface IEmail{
     val date: String
     val isArchived: Boolean
     val isNew: Boolean
+    val isFavorite: Boolean
     val initialLabel: MutableList<EmailLabel>
 }
 
@@ -40,6 +39,8 @@ data class Email(
     override val isNew: Boolean,
     @ColumnInfo(name = "is_archived")
     override var isArchived: Boolean = false,
+    @ColumnInfo(name = "is_favorite")
+    override var isFavorite: Boolean = false,
     @ColumnInfo(name = "initial_label")
     override val initialLabel: MutableList<EmailLabel>
 ) : IEmail{
@@ -48,7 +49,7 @@ data class Email(
         receiver: String,
         title: String,
         content: String,
-        date: LocalDate
+        date: LocalDateTime
     ) : this(
         id = 0,
         sender = sender,
@@ -56,12 +57,12 @@ data class Email(
         title = title,
         content = content,
         date = getDate(date),
-        isNew = false,
+        isNew = true,
         initialLabel = mutableListOf()
     )
 
     companion object {
-        private fun getDate(date: LocalDate): String {
+        private fun getDate(date: LocalDateTime): String {
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
             return date.format(formatter)
         }

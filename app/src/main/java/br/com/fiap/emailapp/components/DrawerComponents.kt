@@ -11,25 +11,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun DrawerContent(navController: NavHostController, drawerState: DrawerState, scope: CoroutineScope) {
+fun DrawerContent(navController: NavHostController, drawerState: DrawerState, scope: CoroutineScope, font: TextUnit,onSizeChange: (TextUnit) -> Unit) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
     Column(
         modifier = Modifier
             .fillMaxSize(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Text("Email App", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(8.dp))
@@ -67,7 +73,10 @@ fun DrawerContent(navController: NavHostController, drawerState: DrawerState, sc
             scope,
             "arquivados" === currentDestination
         )
+        Spacer(Modifier.height(5.dp))
+        FontSizePicker(font,onSizeChange)
     }
+
 }
 
 @Composable
@@ -81,8 +90,9 @@ fun DrawerItem(
 ) {
     val backgroundColor = if (isActive) MaterialTheme.colorScheme.primary else Color.Transparent
     Text(
-        color = if (isActive) Color.White else Color.Black,
+        color = MaterialTheme.colorScheme.onPrimary,
         text = text,
+        style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -102,3 +112,21 @@ fun DrawerItem(
     )
 }
 
+@Composable
+fun FontSizePicker(font: TextUnit,onSizeChange: (TextUnit) -> Unit) {
+    var fontSize by remember { mutableStateOf(font) }
+
+    Column {
+        Text(text = "Fonte: ${fontSize.value.toInt()}sp", fontSize = fontSize)
+
+        Slider(
+            value = fontSize.value,
+            onValueChange = { newSize ->
+                fontSize = newSize.sp
+                onSizeChange(newSize.sp)
+            },
+            valueRange = 12f..30f, // Define o intervalo de tamanhos de fonte
+            steps = 10
+        )
+    }
+}

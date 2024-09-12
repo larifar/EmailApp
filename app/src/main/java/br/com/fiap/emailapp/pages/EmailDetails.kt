@@ -33,7 +33,6 @@ import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
 fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email {
-    var label by remember { mutableStateOf(email.initialLabel) }
     var emailState by remember { mutableStateOf(email) }
 
     Column(
@@ -65,14 +64,14 @@ fun EmailDetail(email: Email, nav: NavController, repo: EmailRepository): Email 
 
             IconButton(
                 onClick = {
-                    label = toggleFavorite(label)
-                    val updatedEmail = email.copy(initialLabel = label)
+                    val updatedEmail = toggleFavorite(emailState)
+                    emailState = updatedEmail
                     repo.update(updatedEmail)
                 }
             ) {
                 Icon(
                     modifier = Modifier.size(30.dp),
-                    imageVector = isFavorite(labels = label),
+                    imageVector = isFavorite(emailState.isFavorite),
                     contentDescription = "Favorite Icon",
                     tint = Color.Yellow,
                 )

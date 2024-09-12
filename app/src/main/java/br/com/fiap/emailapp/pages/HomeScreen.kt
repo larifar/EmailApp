@@ -41,6 +41,7 @@ import br.com.fiap.emailapp.database.model.Email
 import br.com.fiap.emailapp.database.model.EmailLabel
 import br.com.fiap.emailapp.database.repository.EmailRepository
 import br.com.fiap.emailapp.util.performSearch
+import br.com.fiap.emailapp.util.toggleFavorite
 
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, repository: EmailRepository): List<Email> {
@@ -126,10 +127,8 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                         navController.navigate("details/${email.id}")
                     },
                     onToggleFavorite = { updatedEmail ->
-                        filteredEmails = emailList.map {
-                            if (it.id == updatedEmail.id) updatedEmail else it
-                        }
-                        repository.update(updatedEmail)
+                        val e = toggleFavorite(updatedEmail)
+                        repository.update(e)
                         viewModel.buscarEmails()
                     },
                     onToggleChecked = { updatedEmail, isChecked ->
@@ -139,7 +138,6 @@ fun HomeScreen(navController: NavHostController, viewModel: EmailListViewModel, 
                             checkedEmails.remove(updatedEmail)
                         }
                     },
-                    repository = repository
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
             }

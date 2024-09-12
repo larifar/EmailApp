@@ -73,7 +73,7 @@ fun IconButtonWithDropdownMenu(email: Email, onArchive: (Email) -> Unit, onUpdat
 
 @Composable
 fun changeLabelsMenu(email: Email, onDismiss: () -> Unit, onUpdate: (Email) -> Unit) {
-    val availableLabels = EmailLabel.entries
+    val availableLabels = EmailLabel.entries.filter { it != EmailLabel.FAVORITE }
     val selectedLabels by remember {
         mutableStateOf(email.initialLabel)
     }

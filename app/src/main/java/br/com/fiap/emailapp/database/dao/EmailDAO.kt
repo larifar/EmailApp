@@ -25,7 +25,7 @@ interface EmailDAO {
     @Query("SELECT * FROM TBL_EMAILS WHERE id = :id")
     fun buscarPeloId(id: Long): Email
 
-    @Query("SELECT * FROM TBL_EMAILS")
+    @Query("SELECT * FROM TBL_EMAILS ORDER BY date DESC")
     fun listarEmails(): MutableList<Email>
 
     @Query("SELECT * FROM TBL_EMAILS WHERE sender = :sender ")

@@ -46,7 +46,6 @@ fun ArquivadosScreen(
                         onToggleFavorite = {},
                         onToggleChecked = {email, b ->  },
                         multipleSelection= false,
-                        repository,
                         onClick = { navController.navigate("details/${email.id}") }
                     )
                 }
